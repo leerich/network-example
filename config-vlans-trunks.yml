@@ -1,0 +1,81 @@
+---
+- name: configure Switches & Routers
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    S1:
+      host: 172.16.1.98
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+    S2:
+      host: 172.16.1.99
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+    R2:
+      host: 172.16.1.96
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+    R3:
+      host: 172.16.1.97
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+
+  tasks:
+    - name: configure dot1q port on R3 vlan 1
+      ios_config:
+        lines:
+          - encapsulation dot1q 1
+          - ip address 192.168.100.1 255.255.255.0
+        parents: interface g0/2.1
+        provider: "{{ R3 }}"
+
+    - name: configure dot1q port on R3 vlan 2
+      ios_config:
+        lines:
+          - encapsulation dot1q 2
+          - ip address 192.168.200.1 255.255.255.0
+        parents: interface g0/2.2
+        provider: "{{ R3 }}"
+
+
+    - name: configure dot1q port on R2 vlan 1
+      ios_config:
+        lines:
+          - encapsulation dot1q 1
+          - ip address 10.1.1.1 255.255.255.0
+        parents: interface g0/2.1
+        provider: "{{ R2 }}"
+
+    - name: configure dot1q port on R2 vlan 2
+      ios_config:
+        lines:
+          - encapsulation dot1q 2
+          - ip address 10.2.2.1 255.255.255.0
+        parents: interface g0/2.2
+        provider: "{{ R2 }}"
+
+    - name: configure trunk port on S1
+      ios_config:
+        lines:
+          - switchport trunk encapsulation dot1q
+          - switchport mode trunk
+        parents: interface g0/1
+        provider: "{{ S1 }}"
+
+    - name: configure trunk port on S2
+      ios_config:
+        lines:
+          - switchport trunk encap dot1q
+          - switchport mode trunk
+        parents: interface g0/1
+        provider: "{{ S2 }}"

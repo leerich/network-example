@@ -1,0 +1,123 @@
+---
+- name: configure OSPF on the routers
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    R1:
+      host: 172.16.1.70
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+    R2:
+      host: 172.16.1.69
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+    R3:
+      host: 172.16.1.70
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+  tasks:
+    - name: delete OSPF area 0 on R1
+      ios_config:
+        lines:
+          - no router ospf 1
+        provider: "{{ R1 }}"
+
+    - name: delete OSPF area 0 on R2
+      ios_config:
+        lines:
+          - no router ospf 1
+        provider: "{{ R2 }}"
+
+    - name: delete Eigrp on R1
+      ios_config:
+        lines:
+          - no router eigrp 1
+        provider: "{{ R1 }}"
+
+    - name: delete Eigrp on R3
+      ios_config:
+        lines:
+          - no router eigrp 1
+        provider: "{{ R3 }}"
+
+    - name: Reset G0/1 on R1
+      ios_config:
+        lines:
+          - default interface g0/1
+        provider: "{{ R1 }}"
+
+    - name: Reset G0/1 on R1
+      ios_config:
+        lines:
+          - shut
+        parents: int g0/1
+        provider: "{{ R1 }}"
+
+    - name: Reset G0/2 on R1
+      ios_config:
+        lines:
+          - default interface g0/2
+        provider: "{{ R1 }}"
+
+    - name: Reset G0/2 on R1
+      ios_config:
+        lines:
+          - shut
+        parents: int g0/2
+        provider: "{{ R1 }}"
+
+    - name: Delete loopback on R1
+      ios_config:
+        lines:
+          - no int loopback 0
+        provider: "{{ R1 }}"
+        #ignore_errors: yes
+
+    - name: reset  G0/1 on R2
+      ios_config:
+        lines:
+          - default int g0/1
+        provider: "{{ R2 }}"
+
+    - name: reset  G0/1 on R2
+      ios_config:
+        lines:
+          - shut
+        parents: int g0/1
+        provider: "{{ R2 }}"
+
+    - name: delete loopback 0 on R2
+      ios_config:
+        lines:
+          - no int loopback 0
+        provider: "{{ R2 }}"
+        #ignore_errors: yes
+
+    - name: reset  G0/1 on R3
+      ios_config:
+        lines:
+          - default int g0/1
+        provider: "{{ R3 }}"
+
+    - name: reset  G0/1 on R3
+      ios_config:
+        lines:
+          - shut
+        parents: int g0/1
+        provider: "{{ R3 }}"
+
+    - name: delete loopback 0 on R3
+      ios_config:
+        lines:
+          - no int loopback 0
+        provider: "{{ R3 }}"
+        #ignore_errors: yes

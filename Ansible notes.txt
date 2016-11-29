@@ -1,0 +1,9 @@
+To Do:
+Using hosts: localhost atm
+//
+the better solution is to separate data from execution of cli commands but that is a bit more involved
+so instead of hard coding device specific settings in the task … use variables
+
+//
+Create variables for all the devices
+How do you call them in the playbook?

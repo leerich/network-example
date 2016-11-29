@@ -1,4 +1,13 @@
 [router]
-R1 ansible_host=172.16.1.63
-R2 ansible_host=172.16.1.64
-R3 ansible_host=172.16.1.65
+R1 ansible_host=172.16.1.68
+R2 ansible_host=172.16.1.69
+R3 ansible_host=172.16.1.70
+
+
+[ospf]
+R1 ansible_host=172.16.1.68
+R2 ansible_host=172.16.1.69
+
+[eigrp]
+R1 ansible_host=172.16.1.68
+R3 ansible_host=172.16.1.70

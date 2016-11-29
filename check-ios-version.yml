@@ -12,7 +12,7 @@
       host: "{{ ansible_host }}"
       username: gdykeman
       password: "{{ router_pass }}"
-      transport: cli   
+      transport: cli
 
   tasks:
     - name: collect and validate version
