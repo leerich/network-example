@@ -1,0 +1,39 @@
+---
+- name: gather router configs
+  hosts: router
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    cli:
+      host: "{{ ansible_host }}"
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+  tasks:
+    - name: configure interface G0/1
+      ios_config:
+        lines:
+          - ip address 10.0.0.1 255.255.255.0
+          - no shut
+        parents: interface g0/1
+        provider: "{{ cli }}"
+
+    - name: configure interface G0/2
+      ios_config:
+        lines:
+          - ip address 10.0.0.1 255.255.255.0
+          - no shut
+        parents: interface g0/1
+        provider: "{{ cli }}"
+
+    - name: configure loopback 0
+      ios_config:
+        lines:
+          - interface loopback 0
+          - ip address 1.1.1.1
+        provider: "{{ cli }}"

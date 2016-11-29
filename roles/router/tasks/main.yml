@@ -1,0 +1,5 @@
+---
+- name: Generate Configuration files
+  template: src=ciscorouter.j2 dest=/tmp/{{ item.hostname }}.cfg
+  with_items:
+    - cisco_template
