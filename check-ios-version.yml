@@ -1,0 +1,24 @@
+---
+- name: check cisco ios running version
+  hosts: router
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    cli:
+      host: "{{ ansible_host }}"
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli   
+
+  tasks:
+    - name: collect and validate version
+      ios_command:
+        commands: show version
+        provider: "{{ cli }}"
+      register: shver
+
+    - debug: msg="{{ shver.stdout }}"

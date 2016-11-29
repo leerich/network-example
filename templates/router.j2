@@ -1,0 +1,7 @@
+#Config for {{ inventory_hostname }}
+hostname {{ inventory_hostname|upper }}
+
+{ % for uplink in uplinks %}
+interface {{ uplink.router_port }}
+  ip address {{ uplink.router_ip}} 255.255.255.0
+{ % endfor % }
