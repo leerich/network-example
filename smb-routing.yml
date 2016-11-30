@@ -1,0 +1,79 @@
+---
+- name: configuration of network for small business
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    R1:
+      host: 172.16.1.101
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R2:
+      host: 172.16.1.102
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R3:
+      host: 172.16.1.103
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+  tasks:
+          ##### CONFIGURE OSPF R1 - R2 #####
+    - name: configure OSPF area 0 on R1
+      ios_config:
+        lines:
+          - network 10.0.0.0 0.0.0.255 area 0
+          - network 1.1.1.0 0.0.0.255 area 0
+        parents: router ospf 1
+        provider: "{{ R1 }}"
+
+    - name: configure OSPF area 0 on R2
+      ios_config:
+        lines:
+          - network 10.0.0.0 0.0.0.255 area 0
+          - network 2.2.2.0 0.0.0.255 area 0
+        parents: router ospf 1
+        provider: "{{ R2 }}"
+
+          ##### CONFIGURE EIGRP R1 - R3 #####
+    - name: configure Eigrp on R1
+      ios_config:
+        lines:
+          - network 192.168.0.0 0.0.0.255
+          - network 10.10.10.10 0.0.0.0
+        parents: router eigrp 1
+        provider: "{{ R1 }}"
+
+    - name: configure Eigrp on R3
+      ios_config:
+        lines:
+          - network 192.168.0.0 0.0.0.255
+          - network 3.3.3.3 0.0.0.0
+        parents: router eigrp 1
+        provider: "{{ R3 }}"
+
+          ##### CONFIGURE RIP R2 - R3 #####
+    - name: configure RIP on R2
+      ios_config:
+        lines:
+          - network 172.16.0.0
+          - network 20.20.20.20
+        parents: router rip
+        provider: "{{ R2 }}"
+
+    - name: configure RIP on R3
+      ios_config:
+        lines:
+          - network 172.16.0.0
+          - network 30.30.30.30
+        parents: router rip
+        provider: "{{ R3 }}"
