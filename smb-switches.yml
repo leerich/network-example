@@ -1,0 +1,126 @@
+---
+- name: Configuration trunking for smb router & switches
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    R1:
+      host: 172.16.1.101
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R2:
+      host: 172.16.1.102
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R3:
+      host: 172.16.1.103
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    S1:
+      host: 172.16.1.125
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    S2:
+      host: 172.16.1.126
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    S3:
+      host: 172.16.1.127
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+  tasks:
+    - name: configure interface on S2
+      ios_config:
+        lines:
+          - interface vlan 1
+          - ip address 10.1.0.120 255.255.255.0
+          - interface vlan 2
+          - ip address 10.2.0.120 255.255.255.0
+          - interface vlan 3
+          - ip address 172.16.0.120 255.255.255.0
+          - interface vlan 4
+          - ip address 172.17.0.120 255.255.255.0
+        provider: "{{ S2 }}"
+
+    - name: configure interface on S2
+      ios_config:
+        lines:
+          - switchport trunk encapsulation dot1q
+          - switchport mode trunk
+        parents: int g0/1
+        provider: "{{ S2 }}"
+
+    - name: configure interfaces on S2
+      ios_config:
+        lines:
+          - no shut
+        parents: int vlan 1
+        provider: "{{ S2 }}"
+
+    - name: configure interfaces on S2
+      ios_config:
+        lines:
+          - no shut
+        parents: int vlan 2
+        provider: "{{ S2 }}"
+
+    - name: configure interfaces on S2
+      ios_config:
+        lines:
+          - no shut
+        parents: int vlan 3
+        provider: "{{ S2 }}"
+
+    - name: configure interfaces on S2
+      ios_config:
+        lines:
+          - no shut
+        parents: int vlan 4
+        provider: "{{ S2 }}"
+
+    - name: configure interface on S2
+      ios_config:
+        lines:
+          - no shut
+        parents: int g0/1
+        provider: "{{ S2 }}"
+
+    - name: configure trunk on R2
+      ios_config:
+        lines:
+          - no shut
+        parents: int g0/3
+        provider: "{{ R2 }}"
+
+    - name: configure trunk on R2
+      ios_config:
+        lines:
+          - int g0/3.1
+          - encapsulation dot1q 1
+          - ip address 10.1.0.100 255.255.255.0
+          - int g0/3.2
+          - encapsulation dot1q 2
+          - ip address 10.2.0.100 255.255.255.0
+          - int g0/3.3
+          - encapsulation dot1q 3
+          - ip address 172.16.0.100 255.255.255.0
+          - int g0/3.4
+          - encapsulation dot1q 4
+          - ip address 172.17.0.100 255.255.255.0
+        provider: "{{ R2 }}"

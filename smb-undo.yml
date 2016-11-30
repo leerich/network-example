@@ -25,6 +25,7 @@
       transport: cli
 
   tasks:
+##### DELETE ROUTING PROTOCOLS #####
     - name: delete OSPF area 0 on R1
       ios_config:
         lines:
@@ -61,6 +62,8 @@
           - no router rip
         provider: "{{ R3 }}"
 
+##### RESET INTERFACES #####
+
     - name: Reset G0/1 on R1
       ios_config:
         lines:
@@ -91,9 +94,15 @@
       ios_config:
         lines:
           - no int loopback 0
+        provider: "{{ R1 }}"
+      ignore_errors: yes
+
+    - name: Delete loopbacks on R1
+      ios_config:
+        lines:
           - no int loopback 1
         provider: "{{ R1 }}"
-        #ignore_errors: yes
+      ignore_errors: yes
 
     - name: reset  G0/1 on R2
       ios_config:
@@ -121,13 +130,32 @@
         parents: int g0/2
         provider: "{{ R2 }}"
 
+    - name: reset  G0/3 on R2
+      ios_config:
+        lines:
+          - default int g0/2
+        provider: "{{ R2 }}"
+
+    - name: reset  G0/3 on R2
+      ios_config:
+        lines:
+          - shut
+        parents: int g0/2
+        provider: "{{ R2 }}"
+
     - name: delete loopback 0 on R2
       ios_config:
         lines:
           - no int loopback 0
+        provider: "{{ R2 }}"
+      ignore_errors: yes
+
+    - name: delete loopback 0 on R2
+      ios_config:
+        lines:
           - no int loopback 1
         provider: "{{ R2 }}"
-        #ignore_errors: yes
+      ignore_errors: yes
 
     - name: reset G0/1 on R3
       ios_config:
@@ -159,6 +187,12 @@
       ios_config:
         lines:
           - no int loopback 0
+        provider: "{{ R3 }}"
+      ignore_errors: yes
+
+    - name: delete loopback 0 on R3
+      ios_config:
+        lines:
           - no int loopback 1
         provider: "{{ R3 }}"
-        #ignore_errors: yes
+      ignore_errors: yes
