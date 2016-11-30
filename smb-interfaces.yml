@@ -1,0 +1,122 @@
+---
+- name: configuration of router interfaces for smb
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+    - name: router_pass
+      prompt: "Password"
+
+  vars:
+    R1:
+      host: 172.16.1.101
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R2:
+      host: 172.16.1.102
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+    R3:
+      host: 172.16.1.103
+      username: gdykeman
+      password: "{{ router_pass }}"
+      transport: cli
+
+  tasks:
+    - name: configure interface G0/1 on R1
+      ios_config:
+        lines:
+          - ip address 10.0.0.1 255.255.255.0
+          - no shut
+        parents: interface g0/1
+        provider: "{{ R1 }}"
+
+    - name: configure interface G0/2 on R1
+      ios_config:
+        lines:
+          - ip address 192.168.0.1 255.255.255.0
+          - no shut
+        parents: interface g0/2
+        provider: "{{ R1 }}"
+
+    - name: configure loopback 0 on R1
+      ios_config:
+        lines:
+          - interface loopback 0
+          - ip address 1.1.1.1 255.255.255.0
+        provider: "{{ R1 }}"
+
+    - name: configure loopback 1 on R1
+      ios_config:
+        lines:
+          - interface loopback 0
+          - ip address 10.10.10.10 255.255.255.0
+        provider: "{{ R1 }}"
+
+#######################################################
+
+    - name: configure interface G0/1 on R2
+      ios_config:
+        lines:
+          - ip address 10.0.0.2 255.255.255.0
+          - no shut
+        parents: interface g0/1
+        provider: "{{ R2 }}"
+
+    - name: configure interface G0/2 on R2
+      ios_config:
+        lines:
+          - ip address 172.16.0.2 255.255.255.0
+          - no shut
+        parents: interface g0/2
+        provider: "{{ R2 }}"
+
+    - name: configure loopback 0 on R2
+      ios_config:
+        lines:
+          - interface loopback 0
+          - ip address 2.2.2.2 255.255.255.0
+        provider: "{{ R2 }}"
+
+    - name: configure loopback 1 on R2
+      ios_config:
+        lines:
+          - interface loopback 1
+          - ip address 20.20.20.20 255.255.255.0
+        provider: "{{ R2 }}"
+
+#######################################################
+
+    - name: configure interface G0/1 on R3
+      ios_config:
+        lines:
+          - ip address 172.16.0.3 255.255.255.0
+          - no shut
+        parents: interface g0/1
+        provider: "{{ R3 }}"
+
+    - name: configure interface G0/2 on R3
+      ios_config:
+        lines:
+          - ip address 192.168.0.3 255.255.255.0
+          - no shut
+        parents: interface g0/2
+        provider: "{{ R3 }}"
+
+    - name: configure loopback 0 on R3
+      ios_config:
+        lines:
+          - interface loopback 0
+          - ip address 3.3.3.3 255.255.255.0
+        provider: "{{ R3 }}"
+
+    - name: configure loopback 1 on R3
+      ios_config:
+        lines:
+          - interface loopback 1
+          - ip address 30.30.30.30 255.255.255.0
+        provider: "{{ R3 }}"
