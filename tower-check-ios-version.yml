@@ -11,8 +11,11 @@
       transport: cli
 
   tasks:
-    - name: Use the raw module
-      raw: "show version"
+    - name: run show version
+      ios_command:
+        commands: show version
+        provider: "{{ cli }}"
+      register: shver
       
     - name: collect and validate version
       ios_facts:
