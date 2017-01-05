@@ -6,7 +6,6 @@
   vars:
     cli:
       host: "{{ inventory_hostname }}"
-      username: ec2-user
       transport: cli
       
       
