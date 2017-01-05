@@ -11,6 +11,9 @@
       transport: cli
 
   tasks:
+    - name: Use the raw module
+      raw: "show version"
+      
     - name: collect and validate version
       ios_facts:
         gather_subset: all
