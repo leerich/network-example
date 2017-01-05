@@ -6,7 +6,7 @@
   vars:
     cli:
       host: "{{ inventory_hostname }}"
-      username: cisco
+      username: ec2-user
       ssh_keyfile: /root/lrich.pem
       transport: cli
 
