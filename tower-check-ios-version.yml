@@ -7,7 +7,7 @@
     cli:
       host: "{{ inventory_hostname }}"
       username: ec2-user
-      ssh_keyfile: /root/lrich.pem
+      ssh_keyfile: /var/lib/awx/lrich.pem
       
 
   tasks:
