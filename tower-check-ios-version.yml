@@ -8,7 +8,7 @@
       host: "{{ inventory_hostname }}"
       username: ec2-user
       ssh_keyfile: /root/lrich.pem
-      transport: cli
+      
 
   tasks:
     - name: run show version
