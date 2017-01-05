@@ -7,7 +7,7 @@
     cli:
       host: "{{ inventory_hostname }}"
       username: cisco
-      password: cisco
+      ssh_keyfile: /root/lrich.pem
       transport: cli
 
   tasks:
