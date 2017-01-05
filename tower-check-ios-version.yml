@@ -6,6 +6,7 @@
   vars:
     cli:
       host: "{{ inventory_hostname }}"
+      ssh_keyfile: /var/lib/awx/lrich.pem
       transport: cli
       
       
