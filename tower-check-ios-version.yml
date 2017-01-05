@@ -1,0 +1,17 @@
+---
+- name: check cisco ios running version
+  hosts: all
+  
+  vars:
+    cli:
+      host: "{{ ansible_host }}"
+      transport: smart
+
+  tasks:
+    - name: collect and validate version
+      ios_command:
+        commands: show version
+        provider: "{{ cli }}"
+      register: shver
+
+    - debug: msg="{{ shver.stdout }}"
