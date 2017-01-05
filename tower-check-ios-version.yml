@@ -10,9 +10,7 @@
 
   tasks:
     - name: collect and validate version
-      ios_command:
-        commands: show version
+      ios_facts:
+        gather_subset: all
         provider: "{{ cli }}"
-      register: shver
-
-    - debug: msg="{{ shver.stdout }}"
+      
