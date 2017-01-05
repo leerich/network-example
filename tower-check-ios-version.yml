@@ -1,6 +1,7 @@
 ---
 - name: check cisco ios running version
   hosts: all
+  connection: local
   
   vars:
     cli:
