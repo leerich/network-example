@@ -5,7 +5,7 @@
   vars:
     cli:
       host: "{{ inventory_hostname }}"
-      transport: smart
+      transport: cli
 
   tasks:
     - name: collect and validate version
