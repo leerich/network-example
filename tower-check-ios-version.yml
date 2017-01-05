@@ -4,7 +4,7 @@
   
   vars:
     cli:
-      host: "{{ ansible_host }}"
+      host: "{{ inventory_hostname }}"
       transport: smart
 
   tasks:
